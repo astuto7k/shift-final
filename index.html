@@ -818,13 +818,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .reveal--right.is-revealed{transform:translateX(0)}
 .reveal--scale{transform:scale(.92)}
 .reveal--scale.is-revealed{transform:scale(1)}
-/* Stagger delays - filhos de grids */
-.stats-grid .stat-card.reveal:nth-child(1){transition-delay:.05s}
-.stats-grid .stat-card.reveal:nth-child(2){transition-delay:.15s}
-.stats-grid .stat-card.reveal:nth-child(3){transition-delay:.25s}
-.games-grid .game-card.reveal:nth-child(1){transition-delay:.05s}
-.games-grid .game-card.reveal:nth-child(2){transition-delay:.15s}
-.games-grid .game-card.reveal:nth-child(3){transition-delay:.25s}
+/* Após o scroll-reveal, hover sem atraso (transform/sombra/imagem) */
+.stat-card.reveal.reveal-interactive,
+.game-card.reveal.reveal-interactive{
+  transition:opacity .9s var(--ease-out),
+             transform 0ms linear,
+             box-shadow 0ms linear;
+}
+.stat-card.reveal.reveal-interactive .stat-icon,
+.game-card.reveal.reveal-interactive .game-card__media img{
+  transition-duration:0ms;
+}
 
 /* ============ PREFERS REDUCED MOTION ============ */
 @media (prefers-reduced-motion:reduce){
@@ -1530,13 +1534,25 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     });
   });
 
+  function armInstantCardHover(el){
+    if (!el.classList.contains('stat-card') && !el.classList.contains('game-card')) return;
+    function onRevealDone(e){
+      if (e.propertyName !== 'transform') return;
+      el.classList.add('reveal-interactive');
+      el.removeEventListener('transitionend', onRevealDone);
+    }
+    el.addEventListener('transitionend', onRevealDone);
+  }
+
   // Observe + trigger
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          revealObserver.unobserve(entry.target);
+          const el = entry.target;
+          el.classList.add('is-revealed');
+          armInstantCardHover(el);
+          revealObserver.unobserve(el);
         }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
@@ -1544,7 +1560,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     $$('.reveal').forEach(el => revealObserver.observe(el));
   } else {
     // Fallback: revelar tudo imediatamente
-    $$('.reveal').forEach(el => el.classList.add('is-revealed'));
+    $$('.reveal').forEach(el => {
+      el.classList.add('is-revealed');
+      if (el.classList.contains('stat-card') || el.classList.contains('game-card')) {
+        el.classList.add('reveal-interactive');
+      }
+    });
   }
 
 })();
