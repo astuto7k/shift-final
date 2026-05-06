@@ -39,10 +39,12 @@
   --ease-out:      cubic-bezier(.16,1,.3,1);
 }
 
+/* ============ RESET ============ */
 *{box-sizing:border-box;margin:0;padding:0}
 *{
   cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cpath d='M5 4L20 13L13 15L9 22L5 4Z' fill='none' stroke='%230000ff' stroke-opacity='.35' stroke-width='4.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M5 4L20 13L13 15L9 22L5 4Z' fill='none' stroke='%230000ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 5 4, auto;
 }
+/* ============ GLOBAL ============ */
 html{
   scroll-behavior:smooth;
   scroll-padding-top:90px;
@@ -51,7 +53,7 @@ html{
 }
 html,body{
   color:var(--ink);
-  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
@@ -79,6 +81,10 @@ section + section::before{
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none;cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cpath d='M5 4L20 13L13 15L9 22L5 4Z' fill='none' stroke='%230000ff' stroke-opacity='.35' stroke-width='4.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M5 4L20 13L13 15L9 22L5 4Z' fill='none' stroke='%230000ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 5 4, pointer}
 button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cpath d='M5 4L20 13L13 15L9 22L5 4Z' fill='none' stroke='%230000ff' stroke-opacity='.35' stroke-width='4.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M5 4L20 13L13 15L9 22L5 4Z' fill='none' stroke='%230000ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 5 4, pointer}
+a,button,[role="button"]{
+  transition:transform .25s ease, box-shadow .25s ease, color .25s ease, opacity .25s ease, background-color .25s ease;
+}
+a:hover{opacity:.92}
 
 .container{
   width:100%;max-width:var(--maxw);
@@ -231,9 +237,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
   font-weight:700;font-size:15px;letter-spacing:.01em;
   color:#fff;
   position:relative;overflow:hidden;isolation:isolate;
-  transition:transform .35s var(--ease-out),
-             box-shadow .35s var(--ease-out),
-             background-color .3s var(--ease);
+  transition:transform .25s ease,
+             box-shadow .25s ease,
+             background-color .25s ease;
   will-change:transform;
 }
 .btn .btn-icon{width:18px;height:18px;flex-shrink:0}
@@ -268,15 +274,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
 .stat-card{
   background:var(--card);
   border:1.5px solid var(--blue);
-  border-radius:18px;
+  border-radius:14px;
   padding:32px 28px;
   text-align:center;
   position:relative;
-  transition:transform .4s var(--ease-out), box-shadow .4s var(--ease-out);
+  box-shadow:0 6px 20px rgba(0,0,0,.08);
+  transition:transform .25s ease, box-shadow .25s ease;
 }
 .stat-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 20px 40px rgba(0,0,255,.2);
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
 }
 .stat-icon{
   display:flex;justify-content:center;
@@ -351,13 +358,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
 .game-card{
   background:var(--card);
   border:1.5px solid var(--blue);
-  border-radius:20px;
+  border-radius:14px;
   overflow:hidden;display:flex;flex-direction:column;
-  transition:transform .45s var(--ease-out), box-shadow .45s var(--ease-out);
+  box-shadow:0 6px 20px rgba(0,0,0,.08);
+  transition:transform .25s ease, box-shadow .25s ease;
 }
 .game-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 24px 50px rgba(0,0,255,.25);
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
 }
 .game-card__media{
   aspect-ratio:618/288;
@@ -627,6 +635,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
   padding:0;background:none;
 }
 .work-cta-row{margin:0;}
+.work-cta-row .btn {
+  padding: 14px 35px;
+  font-size: 16px;
+}
 
 @media(max-width:1100px){
   .work-card{
@@ -803,18 +815,30 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
 }
 
 /* ============ SCROLL REVEAL ============ */
+/* Animation system:
+   - Reusable classes: .fade-in, .fade-up, .fade-scale
+   - Active state: .is-active (also keeps compatibility with existing .is-revealed)
+   - Uses only opacity + transform for performance. */
+.fade-in,
+.fade-up,
+.fade-scale,
 .reveal{
   opacity:0;
-  transform:translateY(40px);
-  transition:opacity .9s var(--ease-out),
-             transform .9s var(--ease-out);
+  transform:translateY(20px);
+  transition:opacity .6s cubic-bezier(0.4, 0, 0.2, 1),
+             transform .6s cubic-bezier(0.4, 0, 0.2, 1);
   will-change:opacity, transform;
 }
-.reveal.is-revealed{
+.fade-scale{transform:translateY(20px) scale(.98)}
+.fade-in.is-active,
+.fade-up.is-active,
+.fade-scale.is-active,
+.reveal.is-revealed,
+.reveal.is-active{
   opacity:1;
   transform:translateY(0);
 }
-/* Fade-in lateral */
+/* Existing directional variants preserved */
 .reveal--left{transform:translateX(-40px) translateY(0)}
 .reveal--left.is-revealed{transform:translateX(0)}
 .reveal--right{transform:translateX(40px) translateY(0)}
@@ -823,7 +847,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
 .reveal--scale.is-revealed{transform:scale(1)}
 /* Após o scroll-reveal, hover sem atraso (transform/sombra/imagem) */
 .stat-card.reveal.reveal-interactive,
-.game-card.reveal.reveal-interactive{
+.game-card.reveal.reveal-interactive,
+.stat-card.fade-up.reveal-interactive,
+.game-card.fade-scale.reveal-interactive{
   transition:opacity .9s var(--ease-out),
              transform 0ms linear,
              box-shadow 0ms linear;
@@ -1514,18 +1540,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
     }, { once:true });
   });
 
-  /* -------- Scroll reveal animations ----------------------- */
+  /* -------- Scroll reveal animations -----------------------
+     Key UX improvement: subtle fade + upward motion triggered once on viewport entry. */
   const revealConfig = [
-    { selector: '.hero-title',         className: 'reveal' },
-    { selector: '.hero-sub',           className: 'reveal' },
-    { selector: '.hero-cta',           className: 'reveal' },
-    { selector: '.stat-card',          className: 'reveal' },
-    { selector: '.section-title',      className: 'reveal' },
-    { selector: '.game-card',          className: 'reveal reveal--scale' },
-    { selector: '.featured-frame',     className: 'reveal reveal--scale' },
-    { selector: '.join-icons',         className: 'reveal reveal--scale' },
-    { selector: '.join-title',         className: 'reveal' },
-    { selector: '.join-inner .btn',    className: 'reveal' },
+    { selector: '.hero-title',         className: 'fade-up' },
+    { selector: '.hero-sub',           className: 'fade-in' },
+    { selector: '.hero-cta',           className: 'fade-up' },
+    { selector: '.stat-card',          className: 'fade-up' },
+    { selector: '.section-title',      className: 'fade-up' },
+    { selector: '.game-card',          className: 'fade-scale' },
+    { selector: '.featured-frame',     className: 'fade-scale' },
+    { selector: '.join-icons',         className: 'fade-scale' },
+    { selector: '.join-title',         className: 'fade-up' },
+    { selector: '.join-inner .btn',    className: 'fade-up' },
     { selector: '.work-text',          className: 'reveal reveal--left' },
     { selector: '.work-graffiti',      className: 'reveal reveal--right' },
   ];
@@ -1553,6 +1580,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const el = entry.target;
+          el.classList.add('is-active');
           el.classList.add('is-revealed');
           armInstantCardHover(el);
           revealObserver.unobserve(el);
@@ -1560,16 +1588,26 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:url("data:imag
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    $$('.reveal').forEach(el => revealObserver.observe(el));
+    $$('.reveal, .fade-in, .fade-up, .fade-scale').forEach(el => revealObserver.observe(el));
   } else {
     // Fallback: revelar tudo imediatamente
-    $$('.reveal').forEach(el => {
+    $$('.reveal, .fade-in, .fade-up, .fade-scale').forEach(el => {
+      el.classList.add('is-active');
       el.classList.add('is-revealed');
       if (el.classList.contains('stat-card') || el.classList.contains('game-card')) {
         el.classList.add('reveal-interactive');
       }
     });
   }
+
+  // Performance: lazy-load non-critical images while keeping hero/header immediate.
+  $$('img').forEach((img) => {
+    if (!img.hasAttribute('loading')) {
+      const isPriority = !!img.closest('.hero, .site-header');
+      img.loading = isPriority ? 'eager' : 'lazy';
+      if (!isPriority) img.decoding = 'async';
+    }
+  });
 
 })();
 </script></body>
